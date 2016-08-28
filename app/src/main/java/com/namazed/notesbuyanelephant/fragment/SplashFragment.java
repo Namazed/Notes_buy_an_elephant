@@ -1,12 +1,14 @@
-package com.namazed.notesbuyanelephant;
+package com.namazed.notesbuyanelephant.fragment;
 
 
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.namazed.notesbuyanelephant.R;
 
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +40,9 @@ public class SplashFragment extends Fragment {
                 e.printStackTrace();
             }
 
-            getActivity().getSupportFragmentManager().popBackStack();
+            if (getActivity() != null) {
+                getActivity().getFragmentManager().popBackStack();
+            }
 
             return null;
         }

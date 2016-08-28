@@ -1,10 +1,19 @@
 package com.namazed.notesbuyanelephant;
 
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.namazed.notesbuyanelephant.adapter.TabAdapter;
+import com.namazed.notesbuyanelephant.fragment.SplashFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
         PreferenceHelper.getInstance().init(getApplicationContext());
         mPreferenceHelper = PreferenceHelper.getInstance();
 
-        mFragmentManager = getSupportFragmentManager();
+        mFragmentManager = getFragmentManager();
         runSplash();
+        setUI();
     }
 
     @Override
@@ -50,10 +60,62 @@ public class MainActivity extends AppCompatActivity {
             SplashFragment splashFragment = new SplashFragment();
 
             mFragmentManager.beginTransaction()
-                    .replace(R.id.container, splashFragment)
+                    .replace(R.id.content_frame, splashFragment)
                     .addToBackStack(null)
                     .commit();
         }
 
+    }
+
+    private void setUI() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitleTextColor(getColor(getApplicationContext(), R.color.white));
+            setSupportActionBar(toolbar);
+        }
+
+        initTabs();
+
+    }
+
+    private void initTabs() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.current_task));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task));
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        TabAdapter adapter = new TabAdapter(mFragmentManager, 2);
+
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    public static int getColor(Context context, int id) {
+        /*
+            For API 23, because getColor() is deprecated
+         */
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 23) {
+            return ContextCompat.getColor(context, id);
+        } else {
+            return context.getResources().getColor(id);
+        }
     }
 }
