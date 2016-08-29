@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:background="?android:attr/selectableItemBackground">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_view_task_title"
+        android:textSize="16sp"
+        android:textColor="@color/primary_text_default_material_light"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/text_view_task_date"
+        tools:text="TITLE"
+        android:layout_alignParentLeft="true"/>
+
+    <TextView
+        android:id="@+id/text_view_task_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:textSize="14sp"
+        android:textColor="@color/secondary_text_default_material_light"
+        android:layout_alignParentRight="true"
+        tools:text="DATE"
+        android:layout_margin="16dp"/>
+
+</RelativeLayout>
