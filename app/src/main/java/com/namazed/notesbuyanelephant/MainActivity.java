@@ -18,7 +18,10 @@ import android.widget.Toast;
 
 import com.namazed.notesbuyanelephant.adapter.TabAdapter;
 import com.namazed.notesbuyanelephant.dialog.AddingTaskDialogFragment;
+import com.namazed.notesbuyanelephant.fragment.CurrentTaskFragment;
+import com.namazed.notesbuyanelephant.fragment.DoneTaskFragment;
 import com.namazed.notesbuyanelephant.fragment.SplashFragment;
+import com.namazed.notesbuyanelephant.model.ModelTask;
 
 public class MainActivity extends AppCompatActivity
         implements AddingTaskDialogFragment.AddingTaskListener {
@@ -27,6 +30,10 @@ public class MainActivity extends AppCompatActivity
 
     private FragmentManager mFragmentManager;
     private PreferenceHelper mPreferenceHelper;
+    private TabAdapter mTabAdapter;
+
+    CurrentTaskFragment mCurrentTaskFragment;
+    DoneTaskFragment mDoneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +97,9 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(tabLayout.newTab().setText(R.string.done_task));
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        TabAdapter adapter = new TabAdapter(mFragmentManager, 2);
+        mTabAdapter = new TabAdapter(mFragmentManager, 2);
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(mTabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -112,7 +119,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        mCurrentTaskFragment = (CurrentTaskFragment) mTabAdapter
+                .getItem(TabAdapter.CURRENT_TASK_FRAGMENT_POSITION);
+        mDoneTaskFragment = (DoneTaskFragment) mTabAdapter
+                .getItem(TabAdapter.DONE_TASK_FRAGMENT_POSITION);
     }
 
     private void initFab() {
@@ -134,13 +144,14 @@ public class MainActivity extends AppCompatActivity
         if (version >= 23) {
             return ContextCompat.getColor(context, id);
         } else {
+            //noinspection deprecation
             return context.getResources().getColor(id);
         }
     }
 
     @Override
-    public void onTaskAdded() {
-        Toast.makeText(MainActivity.this, "Lopuh", Toast.LENGTH_SHORT).show();
+    public void onTaskAdded(ModelTask newTask) {
+        mCurrentTaskFragment.addTask(newTask);
     }
 
     @Override

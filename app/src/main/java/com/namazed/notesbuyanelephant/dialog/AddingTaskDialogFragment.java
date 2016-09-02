@@ -1,6 +1,7 @@
 package com.namazed.notesbuyanelephant.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,6 +20,7 @@ import android.widget.TimePicker;
 
 import com.namazed.notesbuyanelephant.R;
 import com.namazed.notesbuyanelephant.Utils;
+import com.namazed.notesbuyanelephant.model.ModelTask;
 
 import java.util.Calendar;
 
@@ -31,14 +33,17 @@ public class AddingTaskDialogFragment extends DialogFragment {
     private EditText mEditTextTime;
     private Button mPositiveButton;
     private AddingTaskListener mAddingTaskListener;
+    private Calendar mCalendar;
+    private ModelTask mTask;
 
     public interface AddingTaskListener {
-        void onTaskAdded();
+        void onTaskAdded(ModelTask newTask);
 
         void onTaskAddingCancel();
     }
 
     //todo will go to support Fragment and onAttach(Context context)
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -49,6 +54,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
         }
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -62,13 +68,22 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
         builder.setView(mContainer);
 
+
+        mTask = new ModelTask();
+        mCalendar = Calendar.getInstance();
+        mCalendar.set(Calendar.HOUR_OF_DAY, mCalendar.get(Calendar.HOUR_OF_DAY) + 1);
+
         afterClickForDate();
         afterClickForTime();
 
         builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mAddingTaskListener.onTaskAdded();
+                mTask.setTitle(mEditTextTitle.getText().toString());
+                if (mEditTextDate.length() != 0 || mEditTextTime.length() != 0) {
+                    mTask.setDate(mCalendar.getTimeInMillis());
+                }
+                mAddingTaskListener.onTaskAdded(mTask);
                 dialogInterface.dismiss();
             }
         });
@@ -129,10 +144,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
                 DialogFragment datePickerFragment = new DatePickerFragment() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        Calendar dateCalendar = Calendar.getInstance();
-                        dateCalendar.set(i, i1, i2);
-                        mEditTextDate.setText(Utils.getDate(dateCalendar.getTimeInMillis()));
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        mCalendar.set(Calendar.YEAR, year);
+                        mCalendar.set(Calendar.MONTH, month);
+                        mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        mEditTextDate.setText(Utils.getDate(mCalendar.getTimeInMillis()));
                     }
 
                     @Override
@@ -156,10 +172,11 @@ public class AddingTaskDialogFragment extends DialogFragment {
 
                 DialogFragment timePickerFragment = new TimePickerFragment() {
                     @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        Calendar timeCalendar = Calendar.getInstance();
-                        timeCalendar.set(0, 0, 0, i, i1);
-                        mEditTextTime.setText(Utils.getTime(timeCalendar.getTimeInMillis()));
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        mCalendar.set(Calendar.MINUTE, minute);
+                        mCalendar.set(Calendar.SECOND, 0);
+                        mEditTextTime.setText(Utils.getTime(mCalendar.getTimeInMillis()));
                     }
 
                     @Override
