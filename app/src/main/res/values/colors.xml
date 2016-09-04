@@ -11,5 +11,24 @@
     <color name="colorPrimaryBG">#607D8B</color>
     <color name="colorPrimaryDarkBG">#455A64</color>
     <color name="colorPrimaryLightBG">#CFD8DC</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#FFF</color>
+
+    <!--Priority CircleImageView-->
+    <color name="priority_high">#E53935</color>
+    <color name="priority_normal">#00897B</color>
+    <color name="priority_low">#3949AB</color>
+
+    <color name="priority_high_selected">#EF9A9A</color>
+    <color name="priority_normal_selected">#80CBC4</color>
+    <color name="priority_low_selected">#9FA8DA</color>
+
+    <!--Color for item list-->
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_200">#EEE</color>
+
+    <!--Private resource, override them-->
+    <color name="override_primary_text_default_material_light">#de000000</color>
+    <color name="override_secondary_text_default_material_light">#8a000000</color>
+    <color name="override_primary_text_disabled_material_light">#39000000</color>
+    <color name="override_secondary_text_disabled_material_light">#24000000</color>
 </resources>

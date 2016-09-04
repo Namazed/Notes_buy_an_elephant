@@ -1,6 +1,6 @@
 package com.namazed.notesbuyanelephant.fragment;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +12,25 @@ import com.namazed.notesbuyanelephant.R;
 import com.namazed.notesbuyanelephant.adapter.CurrentTasksAdapter;
 import com.namazed.notesbuyanelephant.model.ModelTask;
 
-public class CurrentTaskFragment extends Fragment {
-
-    private RecyclerView mRecyclerViewCurrentTasks;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private CurrentTasksAdapter mAdapter;
+public class CurrentTaskFragment extends TaskFragment {
 
     public CurrentTaskFragment() {
+    }
+
+    OnTaskDoneListener mOnTaskDoneListener;
+
+    public interface OnTaskDoneListener {
+        void onTaskDone(ModelTask task);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mOnTaskDoneListener = (OnTaskDoneListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnTaskDoneListener");
+        }
     }
 
     @Override
@@ -28,33 +39,18 @@ public class CurrentTaskFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_current_task, container, false);
 
-        mRecyclerViewCurrentTasks = (RecyclerView) rootView
+        mRecyclerViewTasks = (RecyclerView) rootView
                 .findViewById(R.id.current_tasks_recycler_view);
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerViewCurrentTasks.setLayoutManager(mLayoutManager);
-        mAdapter = new CurrentTasksAdapter();
-        mRecyclerViewCurrentTasks.setAdapter(mAdapter);
+        mRecyclerViewTasks.setLayoutManager(mLayoutManager);
+        mAdapter = new CurrentTasksAdapter(this);
+        mRecyclerViewTasks.setAdapter(mAdapter);
 
         return rootView;
     }
 
-    public void addTask(ModelTask newTask) {
-        int position = -1;
-
-        for (int i = 0; i < mAdapter.getItemCount(); i++) {
-            if (mAdapter.getItem(i).isTask()) {
-                ModelTask task = (ModelTask) mAdapter.getItem(i);
-                if (newTask.getDate() < task.getDate()) {
-                    position = i;
-                    break;
-                }
-            }
-        }
-
-        if (position != -1) {
-            mAdapter.addItem(position, newTask);
-        } else {
-            mAdapter.addItem(newTask);
-        }
+    @Override
+    public void moveTask(ModelTask task) {
+        mOnTaskDoneListener.onTaskDone(task);
     }
 }

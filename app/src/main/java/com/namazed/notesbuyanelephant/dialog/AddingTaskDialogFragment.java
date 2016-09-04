@@ -13,9 +13,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.namazed.notesbuyanelephant.R;
@@ -73,6 +76,8 @@ public class AddingTaskDialogFragment extends DialogFragment {
         mCalendar = Calendar.getInstance();
         mCalendar.set(Calendar.HOUR_OF_DAY, mCalendar.get(Calendar.HOUR_OF_DAY) + 1);
 
+        initSpinnerPriority();
+
         afterClickForDate();
         afterClickForTime();
 
@@ -83,6 +88,7 @@ public class AddingTaskDialogFragment extends DialogFragment {
                 if (mEditTextDate.length() != 0 || mEditTextTime.length() != 0) {
                     mTask.setDate(mCalendar.getTimeInMillis());
                 }
+                mTask.setStatus(ModelTask.STATUS_CURRENT);
                 mAddingTaskListener.onTaskAdded(mTask);
                 dialogInterface.dismiss();
             }
@@ -114,7 +120,6 @@ public class AddingTaskDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
-
     public void initTextInputLayout() {
         mTilTitle = (TextInputLayout)
                 mContainer.findViewById(R.id.til_dialog_task_title);
@@ -131,6 +136,29 @@ public class AddingTaskDialogFragment extends DialogFragment {
         mTilTitle.setHint(getResources().getString(R.string.task_title_hint));
         tilDate.setHint(getResources().getString(R.string.task_date_hint));
         tilTime.setHint(getResources().getString(R.string.task_time_hint));
+    }
+
+
+    private void initSpinnerPriority() {
+        Spinner spinnerPriority = (Spinner) mContainer
+                .findViewById(R.id.spinner_dialog_task_priority);
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getResources().getStringArray(R.array.priority_levels)
+        );
+        spinnerPriority.setAdapter(priorityAdapter);
+        spinnerPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                mTask.setPriority(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
 

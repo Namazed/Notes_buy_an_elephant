@@ -21,10 +21,12 @@ import com.namazed.notesbuyanelephant.dialog.AddingTaskDialogFragment;
 import com.namazed.notesbuyanelephant.fragment.CurrentTaskFragment;
 import com.namazed.notesbuyanelephant.fragment.DoneTaskFragment;
 import com.namazed.notesbuyanelephant.fragment.SplashFragment;
+import com.namazed.notesbuyanelephant.fragment.TaskFragment;
 import com.namazed.notesbuyanelephant.model.ModelTask;
 
 public class MainActivity extends AppCompatActivity
-        implements AddingTaskDialogFragment.AddingTaskListener {
+        implements AddingTaskDialogFragment.AddingTaskListener,
+        DoneTaskFragment.OnTaskRestoreListener, CurrentTaskFragment.OnTaskDoneListener {
 
     private static final int LAYOUT = R.layout.activity_main;
 
@@ -32,8 +34,8 @@ public class MainActivity extends AppCompatActivity
     private PreferenceHelper mPreferenceHelper;
     private TabAdapter mTabAdapter;
 
-    CurrentTaskFragment mCurrentTaskFragment;
-    DoneTaskFragment mDoneTaskFragment;
+    TaskFragment mCurrentTaskFragment;
+    TaskFragment mDoneTaskFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,5 +159,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onTaskAddingCancel() {
         Toast.makeText(MainActivity.this, "No lopuh", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTaskDone(ModelTask task) {
+        mDoneTaskFragment.addTask(task);
+    }
+
+    @Override
+    public void onTaskRestore(ModelTask task) {
+        mCurrentTaskFragment.addTask(task);
     }
 }

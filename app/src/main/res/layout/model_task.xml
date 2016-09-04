@@ -14,7 +14,7 @@
         android:textSize="16sp"
         android:textColor="@color/primary_text_default_material_light"
         android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="72dp"
         android:layout_toRightOf="@+id/text_view_task_date"
         tools:text="TITLE"
         android:layout_alignParentLeft="true"/>
@@ -30,4 +30,12 @@
         tools:text="DATE"
         android:layout_margin="16dp"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cv_task_priority"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@color/colorPrimary"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        />
 </RelativeLayout>
