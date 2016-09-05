@@ -76,6 +76,9 @@ public class DoneTasksAdapter extends TaskAdapter {
                 public void onClick(View view) {
                     mTask.setStatus(ModelTask.STATUS_CURRENT);
 
+                    getTaskFragment().activity.dbHelper.getUpdateManager()
+                            .status(mTask.getTimeStamp(), ModelTask.STATUS_CURRENT);
+
                     setColorForBackgroundAndText(
                             R.color.gray_50,
                             R.color.override_primary_text_default_material_light,

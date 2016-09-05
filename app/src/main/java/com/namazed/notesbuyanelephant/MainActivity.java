@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.namazed.notesbuyanelephant.adapter.TabAdapter;
+import com.namazed.notesbuyanelephant.database.DBHelper;
 import com.namazed.notesbuyanelephant.dialog.AddingTaskDialogFragment;
 import com.namazed.notesbuyanelephant.fragment.CurrentTaskFragment;
 import com.namazed.notesbuyanelephant.fragment.DoneTaskFragment;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     TaskFragment mCurrentTaskFragment;
     TaskFragment mDoneTaskFragment;
 
+    public DBHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity
 
         PreferenceHelper.getInstance().init(getApplicationContext());
         mPreferenceHelper = PreferenceHelper.getInstance();
+
+        dbHelper = new DBHelper(getApplicationContext());
 
         mFragmentManager = getFragmentManager();
         runSplash();
@@ -153,7 +158,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTaskAdded(ModelTask newTask) {
-        mCurrentTaskFragment.addTask(newTask);
+        mCurrentTaskFragment.addTask(newTask, true);
     }
 
     @Override
@@ -163,11 +168,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTaskDone(ModelTask task) {
-        mDoneTaskFragment.addTask(task);
+        mDoneTaskFragment.addTask(task, false);
     }
 
     @Override
     public void onTaskRestore(ModelTask task) {
-        mCurrentTaskFragment.addTask(task);
+        mCurrentTaskFragment.addTask(task, false);
     }
 }

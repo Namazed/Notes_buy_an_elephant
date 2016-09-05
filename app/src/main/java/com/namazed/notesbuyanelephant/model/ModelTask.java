@@ -3,6 +3,8 @@ package com.namazed.notesbuyanelephant.model;
 
 import com.namazed.notesbuyanelephant.R;
 
+import java.util.Date;
+
 public class ModelTask implements Item {
 
     public static final int PRIORITY_LOW = 0;
@@ -20,16 +22,19 @@ public class ModelTask implements Item {
     private long mDate;
     private int mPriority;
     private int mStatus;
+    private long mTimeStamp;
 
     public ModelTask() {
         mStatus = -1;
+        mTimeStamp = new Date().getTime();
     }
 
-    public ModelTask(String title, long date, int priority, int status) {
+    public ModelTask(String title, long date, int priority, int status, long timeStamp) {
         mDate = date;
         mTitle = title;
         mPriority = priority;
         mStatus = status;
+        mTimeStamp = timeStamp;
     }
 
     public int getPriorityColor() {
@@ -92,5 +97,13 @@ public class ModelTask implements Item {
 
     public void setStatus(int status) {
         mStatus = status;
+    }
+
+    public long getTimeStamp() {
+        return mTimeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        mTimeStamp = timeStamp;
     }
 }

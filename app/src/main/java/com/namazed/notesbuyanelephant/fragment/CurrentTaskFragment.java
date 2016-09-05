@@ -10,7 +10,11 @@ import android.view.ViewGroup;
 
 import com.namazed.notesbuyanelephant.R;
 import com.namazed.notesbuyanelephant.adapter.CurrentTasksAdapter;
+import com.namazed.notesbuyanelephant.database.DBHelper;
 import com.namazed.notesbuyanelephant.model.ModelTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CurrentTaskFragment extends TaskFragment {
 
@@ -23,6 +27,7 @@ public class CurrentTaskFragment extends TaskFragment {
         void onTaskDone(ModelTask task);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -47,6 +52,19 @@ public class CurrentTaskFragment extends TaskFragment {
         mRecyclerViewTasks.setAdapter(mAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void addTaskFromDB() {
+        List<ModelTask> tasks = new ArrayList<>();
+        tasks.addAll(activity.dbHelper.getQueryManager().getTasks(DBHelper.SELECTION_STATUS
+                + " OR " + DBHelper.SELECTION_STATUS, new String[]{
+                Integer.toString(ModelTask.STATUS_CURRENT),
+                Integer.toString(ModelTask.STATUS_OVERDUE)}, DBHelper.TASK_DATE_COLUMN));
+
+        for (int i = 0; i < tasks.size(); i++) {
+            addTask(tasks.get(i), false);
+        }
     }
 
     @Override

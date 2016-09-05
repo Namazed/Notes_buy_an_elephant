@@ -83,6 +83,9 @@ public class CurrentTasksAdapter extends TaskAdapter {
                 public void onClick(View view) {
                     mTask.setStatus(ModelTask.STATUS_DONE);
 
+                    getTaskFragment().activity.dbHelper.getUpdateManager()
+                            .status(mTask.getTimeStamp(), ModelTask.STATUS_DONE);
+
                     setColorForBackgroundAndText(
                             R.color.gray_200,
                             R.color.override_primary_text_disabled_material_light,
